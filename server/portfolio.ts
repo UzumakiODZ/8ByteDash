@@ -25,19 +25,18 @@ interface SoldRow {
 }
 
 function loadHoldings(): Holding[] {
-  const raw = readFileSync(holdingsPath, "utf-8");
-  return JSON.parse(raw) as Holding[];
+  return JSON.parse(readFileSync(holdingsPath, "utf-8")) as Holding[];
 }
 
 function loadSold(): SoldHolding[] {
   try {
     const rows = JSON.parse(readFileSync(soldPath, "utf-8")) as SoldRow[];
-    return rows.map((r) => {
-      const investment = r.purchasePrice * r.qty;
-      const proceeds = r.salePrice * r.qty;
+    return rows.map((row) => {
+      const investment = row.purchasePrice * row.qty;
+      const proceeds = row.salePrice * row.qty;
       const realizedGain = proceeds - investment;
       return {
-        ...r,
+        ...row,
         investment,
         proceeds,
         realizedGain,
@@ -65,9 +64,6 @@ export async function buildPortfolio(): Promise<PortfolioResponse> {
     const q = bySymbol.get(h.yahooSymbol);
     const investment = h.purchasePrice * h.qty;
 
-    // CMP fallback chain: live Yahoo → excel sheet reference → unavailable.
-    // (The old mock fallback in yahoo.ts only triggers when no sheet value exists;
-    // every sheet holding has one, so sheet values win over mocks.)
     let cmp: number | null = null;
     let cmpSource: EnrichedHolding["cmpSource"] = "unavailable";
     if (q && !q.stale && q.cmp !== null) {
@@ -85,7 +81,6 @@ export async function buildPortfolio(): Promise<PortfolioResponse> {
     const gainLoss = presentValue !== null ? presentValue - investment : null;
     const gainLossPct = gainLoss !== null && investment !== 0 ? (gainLoss / investment) * 100 : null;
 
-    // P/E + earnings fallback chain: live Yahoo → excel sheet → unavailable.
     const peLive = q && !q.stale ? q.peRatio : null;
     const earnLive = q && !q.stale ? q.latestEarnings : null;
 
@@ -112,7 +107,6 @@ export async function buildPortfolio(): Promise<PortfolioResponse> {
     };
   });
 
-  // Sector grouping
   const sectorMap = new Map<string, EnrichedHolding[]>();
   for (const h of enriched) {
     const arr = sectorMap.get(h.sector) ?? [];

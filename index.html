@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>8ByteDash — Dynamic Portfolio Dashboard</title>
     <script>
-      // Apply saved/system theme before first paint to avoid a flash.
-      // Oat UI themes via `color-scheme` + light-dark(), so this one
-      // property switches the whole design system.
       try {
         var t = localStorage.getItem("8bytedash-theme");
         if (t !== "light" && t !== "dark") {
@@ -16,7 +13,7 @@
         }
         document.documentElement.style.colorScheme = t;
         document.documentElement.dataset.theme = t;
-      } catch (e) {}
+      } catch {}
     </script>
   </head>
   <body>

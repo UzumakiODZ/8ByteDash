@@ -26,31 +26,36 @@ export function usePortfolio() {
   const timerRef = useRef<number | null>(null);
   const countdownRef = useRef<number | null>(null);
 
-  const fetchData = useCallback(async (silent = false) => {
-    if (!silent) setState((s) => ({ ...s, loading: true, error: null }));
+  const loadPortfolio = useCallback(async (keepCurrentData = false) => {
+    if (!keepCurrentData) setState((state) => ({ ...state, loading: true, error: null }));
     try {
-      const res = await axios.get<PortfolioResponse>("/api/portfolio", { timeout: 20000 });
-      setState((s) => ({
-        ...s,
-        data: res.data,
+      const response = await axios.get<PortfolioResponse>("/api/portfolio", { timeout: 20_000 });
+      setState((state) => ({
+        ...state,
+        data: response.data,
         loading: false,
         error: null,
-        lastUpdated: res.data.lastUpdated,
+        lastUpdated: response.data.lastUpdated,
         countdown: REFRESH_MS / 1000,
       }));
-    } catch (e: any) {
-      setState((s) => ({
-        ...s,
+    } catch (error: unknown) {
+      const message = axios.isAxiosError(error)
+        ? error.response?.data?.error ?? error.message
+        : error instanceof Error
+          ? error.message
+          : "Failed to fetch portfolio";
+      setState((state) => ({
+        ...state,
         loading: false,
-        error: e?.response?.data?.error ?? e?.message ?? "Failed to fetch portfolio",
+        error: message,
       }));
     }
   }, []);
 
   useEffect(() => {
-    fetchData(false);
+    loadPortfolio();
     timerRef.current = window.setInterval(() => {
-      if (!pausedRef.current) fetchData(true);
+      if (!pausedRef.current) loadPortfolio(true);
     }, REFRESH_MS);
     countdownRef.current = window.setInterval(() => {
       setState((s) => {
@@ -62,7 +67,7 @@ export function usePortfolio() {
       if (timerRef.current) window.clearInterval(timerRef.current);
       if (countdownRef.current) window.clearInterval(countdownRef.current);
     };
-  }, [fetchData]);
+  }, [loadPortfolio]);
 
   const togglePaused = useCallback(() => {
     setState((s) => {
@@ -71,7 +76,7 @@ export function usePortfolio() {
     });
   }, []);
 
-  const refresh = useCallback(() => fetchData(true), [fetchData]);
+  const refresh = useCallback(() => loadPortfolio(true), [loadPortfolio]);
 
   return { ...state, refresh, togglePaused, refreshMs: REFRESH_MS };
 }

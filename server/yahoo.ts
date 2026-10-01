@@ -1,23 +1,10 @@
 import yahooFinance from "yahoo-finance2";
 import type { IndexQuote, Quote } from "../src/lib/portfolio-types.js";
 
-// yahoo-finance2 v2 default-export is a pre-built instance (not a constructor).
 const yahoo: any = yahooFinance as any;
 try {
   yahoo.suppressNotices(["yahooSurvey"]);
-} catch {
-  /* older versions may not expose suppressNotices — safe to ignore */
-}
-
-// ---------------------------------------------------------------------------
-// Simple in-memory cache with TTL + request coalescing + throttle.
-// Yahoo has no official public API; yahoo-finance2 hits the unofficial
-// chart/quote endpoints. To respect rate limits we:
-//   1. cache quotes for CACHE_TTL_MS
-//   2. coalesce concurrent requests for the same symbol
-//   3. throttle batches (small delay between symbols)
-//   4. fall back to last-known-good values, then to deterministic mock data
-// ---------------------------------------------------------------------------
+} catch {}
 
 export const CACHE_TTL_MS = 15_000;
 
@@ -31,7 +18,6 @@ const inflight = new Map<string, Promise<Quote>>();
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-/** Deterministic mock CMP so the UI never goes blank (clearly flagged stale). */
 function mockQuote(symbol: string): Quote {
   let h = 0;
   for (const c of symbol) h = (h * 31 + c.charCodeAt(0)) % 100000;
@@ -104,7 +90,6 @@ async function fetchOne(symbol: string): Promise<Quote> {
         stale: false,
       };
       if (cmp === null) {
-        // Yahoo returned no price — reuse cache if possible.
         if (cached) return { ...cached.quote, stale: true, error: "no-price" };
         return mockQuote(symbol);
       }
@@ -114,7 +99,6 @@ async function fetchOne(symbol: string): Promise<Quote> {
       if (cached) return { ...cached.quote, stale: true, error: String(err?.message ?? err) };
       const m = mockQuote(symbol);
       m.error = String(err?.message ?? err);
-      // Cache the mock briefly so we don't hammer Yahoo while offline.
       cache.set(symbol, { quote: m, fetchedAt: Date.now() - CACHE_TTL_MS + 5_000 });
       return m;
     } finally {
@@ -134,7 +118,6 @@ export async function getQuotes(symbols: string[]): Promise<{ quotes: Quote[]; p
     const q = await fetchOne(unique[i]);
     if (q.stale) partial = true;
     quotes.push(q);
-    // Gentle throttle between symbols to avoid Yahoo rate-limiting.
     if (i < unique.length - 1) await sleep(120);
   }
   return { quotes, partial };
@@ -143,11 +126,6 @@ export async function getQuotes(symbols: string[]): Promise<{ quotes: Quote[]; p
 export function getCacheStats() {
   return { size: cache.size, ttlMs: CACHE_TTL_MS };
 }
-
-// ---------------------------------------------------------------------------
-// Market indices for the Kite-style ticker strip. Best-effort: never throws,
-// never affects the holdings `partial` flag.
-// ---------------------------------------------------------------------------
 
 const INDICES: Array<{ symbol: string; label: string }> = [
   { symbol: "^NSEI", label: "NIFTY 50" },

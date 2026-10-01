@@ -1,8 +1,7 @@
-import React, { memo } from "react";
-import { formatINR, formatPct } from "@/lib/utils";
 import type { SoldHolding } from "@/lib/portfolio-types";
+import { formatINR, formatPct } from "@/lib/utils";
 
-function SoldPositions({ sold }: { sold: SoldHolding[] }) {
+export default function SoldPositions({ sold }: { sold: SoldHolding[] }) {
   if (sold.length === 0) return null;
   return (
     <section id="exited" className="panel" aria-label="Exited positions">
@@ -61,5 +60,3 @@ function SoldPositions({ sold }: { sold: SoldHolding[] }) {
     </section>
   );
 }
-
-export default memo(SoldPositions);

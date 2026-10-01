@@ -1,5 +1,5 @@
-import React, { memo, useMemo, useState } from "react";
-import { ArrowUpDown, Search } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowUpDown, Search, SearchX, X } from "lucide-react";
 import { formatINR, formatNumber, formatPct } from "@/lib/utils";
 import { sectorColor } from "@/lib/sector-colors";
 import type { EnrichedHolding, PortfolioResponse } from "@/lib/portfolio-types";
@@ -24,7 +24,7 @@ function GainCell({ value, pct }: { value: number | null; pct?: number | null })
   );
 }
 
-function PortfolioTable({ data }: { data: PortfolioResponse }) {
+export default function PortfolioTable({ data }: { data: PortfolioResponse }) {
   const [query, setQuery] = useState("");
   const [sector, setSector] = useState<string>("All");
   const [sortKey, setSortKey] = useState<SortKey>("investment");
@@ -53,7 +53,7 @@ function PortfolioTable({ data }: { data: PortfolioResponse }) {
       arr.push(h);
       bySector.set(h.sector, arr);
     }
-    const val = (h: EnrichedHolding): number => {
+    const sortValue = (h: EnrichedHolding): number => {
       switch (sortKey) {
         case "particulars":
           return 0;
@@ -72,7 +72,7 @@ function PortfolioTable({ data }: { data: PortfolioResponse }) {
     for (const arr of bySector.values()) {
       arr.sort((a, b) => {
         if (sortKey === "particulars") return sortDir * a.particulars.localeCompare(b.particulars);
-        return sortDir * (val(a) - val(b));
+        return sortDir * (sortValue(a) - sortValue(b));
       });
     }
     return [...bySector.entries()].sort((a, b) => a[0].localeCompare(b[0]));
@@ -93,6 +93,11 @@ function PortfolioTable({ data }: { data: PortfolioResponse }) {
   );
 
   const shortName = (s: string) => (s === "All" ? "All" : s.replace(" Sector", ""));
+  const filteredCount = grouped.reduce((total, [, rows]) => total + rows.length, 0);
+  const clearFilters = () => {
+    setQuery("");
+    setSector("All");
+  };
 
   return (
     <section id="holdings" className="panel" aria-label="Holdings">
@@ -102,8 +107,7 @@ function PortfolioTable({ data }: { data: PortfolioResponse }) {
             Holdings <span className="badge">{data.holdings.length}</span>
           </h2>
           <p>
-            LTP, current value &amp; P&amp;L refresh every 15s. Green is profit, red is loss. Grey
-            figures are the sheet reference for comparison.
+            <strong>{filteredCount}</strong> of {data.holdings.length} positions shown · values refresh every 15s.
           </p>
         </div>
         <div className="panel-controls">
@@ -116,6 +120,11 @@ function PortfolioTable({ data }: { data: PortfolioResponse }) {
               onChange={(e) => setQuery(e.target.value)}
               aria-label="Search holdings"
             />
+            {query && (
+              <button type="button" className="clear-search" onClick={() => setQuery("")} aria-label="Clear search">
+                <X size={14} />
+              </button>
+            )}
           </label>
         </div>
       </div>
@@ -165,8 +174,15 @@ function PortfolioTable({ data }: { data: PortfolioResponse }) {
             {grouped.length === 0 && (
               <tbody>
                 <tr>
-                  <td colSpan={11} className="text-light">
-                    No holdings match your filter.
+                  <td colSpan={11}>
+                    <div className="table-empty">
+                      <SearchX aria-hidden="true" size={22} />
+                      <div>
+                        <strong>No positions found</strong>
+                        <span>Try a different company, code, or sector.</span>
+                      </div>
+                      <button type="button" className="outline small" onClick={clearFilters}>Clear filters</button>
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -260,5 +276,3 @@ function PortfolioTable({ data }: { data: PortfolioResponse }) {
     </section>
   );
 }
-
-export default memo(PortfolioTable);

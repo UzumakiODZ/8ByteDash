@@ -1,5 +1,3 @@
-/** Stable sector → color mapping shared by the pie chart and the holdings table. */
-
 export const SECTOR_COLORS = [
   "#387ed1",
   "#7c6fd0",
@@ -11,7 +9,6 @@ export const SECTOR_COLORS = [
   "#8ab661",
 ];
 
-/** Sheet sector order (order of first appearance in the workbook). */
 const SECTOR_ORDER = [
   "Financial Sector",
   "Tech Sector",

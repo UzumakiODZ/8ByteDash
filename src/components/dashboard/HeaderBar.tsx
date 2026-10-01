@@ -1,5 +1,5 @@
 import React from "react";
-import { Pause, Play, RefreshCw, Sun, Moon } from "lucide-react";
+import { Pause, Play, RefreshCw, Sun, Moon, LoaderCircle } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
 import { formatNumber, formatPct } from "@/lib/utils";
 import type { IndexQuote } from "@/lib/portfolio-types";
@@ -70,7 +70,7 @@ export function HeaderBar({
           </nav>
 
           <div className="kite-actions">
-            <span className="kite-updated">
+            <span className="kite-updated" aria-live="polite">
               {lastUpdated
                 ? `Updated ${new Date(lastUpdated).toLocaleTimeString("en-IN", {
                     hour: "2-digit",
@@ -89,11 +89,11 @@ export function HeaderBar({
             >
               {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
             </button>
-            <button type="button" className="outline small" onClick={onToggle}>
+            <button type="button" className="outline small pause-button" onClick={onToggle}>
               {paused ? <Play size={14} /> : <Pause size={14} />} {paused ? "Resume" : "Pause"}
             </button>
-            <button type="button" className="small" onClick={onRefresh} disabled={loading}>
-              <RefreshCw size={14} /> Refresh
+            <button type="button" className="small refresh-button" onClick={onRefresh} disabled={loading}>
+              {loading ? <LoaderCircle className="spin" size={14} /> : <RefreshCw size={14} />} Refresh
             </button>
           </div>
         </div>

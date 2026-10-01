@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   PieChart,
   Pie,
@@ -31,19 +31,17 @@ function useMediaQuery(query: string): boolean {
   return matches;
 }
 
-/** Short labels so category axes never overflow on narrow screens. */
 function shortSector(s: string): string {
   return s.replace(" Sector", "");
 }
 
-/** Percentage label rendered INSIDE the slice (never collides with the legend below). */
 function renderInsideLabel(props: any) {
   const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
   if (percent == null || percent < 0.06) return null;
-  const RADIAN = Math.PI / 180;
-  const r = innerRadius + (outerRadius - innerRadius) * 0.55;
-  const x = cx + r * Math.cos(-midAngle * RADIAN);
-  const y = cy + r * Math.sin(-midAngle * RADIAN);
+  const radians = Math.PI / 180;
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.55;
+  const x = cx + radius * Math.cos(-midAngle * radians);
+  const y = cy + radius * Math.sin(-midAngle * radians);
   return (
     <text
       x={x}
@@ -59,7 +57,7 @@ function renderInsideLabel(props: any) {
   );
 }
 
-function Charts({ data }: { data: PortfolioResponse }) {
+export default function Charts({ data }: { data: PortfolioResponse }) {
   const isMobile = useMediaQuery("(max-width: 640px)");
   const { theme } = useTheme();
   const dark = theme === "dark";
@@ -196,5 +194,3 @@ function Charts({ data }: { data: PortfolioResponse }) {
     </section>
   );
 }
-
-export default memo(Charts);

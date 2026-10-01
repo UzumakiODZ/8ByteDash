@@ -1,0 +1,515 @@
+/* 8ByteDash — Kite-inspired theme built on Oat UI design tokens.
+   Oat (by Zerodha's CTO) provides the base components; this file maps Oat's
+   variables to a Kite-like palette and adds the page layout. */
+
+:root {
+  --primary: light-dark(#387ed1, #6aa5e8);
+  --primary-foreground: light-dark(#ffffff, #0b1220);
+  --ring: light-dark(#387ed1, #6aa5e8);
+  --success: light-dark(#0e7c3e, #4cc38a);
+  --danger: light-dark(#d0342c, #f08b85);
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --radius-medium: 0.25rem;
+  --radius-large: 0.375rem;
+
+  --kite-red: #df514c;
+  --kite-page-max: 1200px;
+}
+
+html {
+  font-family: var(--font-sans);
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* ---------- page frame ---------- */
+.kite-wrap {
+  max-width: var(--kite-page-max);
+  margin-inline: auto;
+  padding: 0 var(--space-4) var(--space-12);
+}
+
+/* ---------- indices ticker strip (like Kite's top index bar) ---------- */
+.ticker {
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+  font-size: var(--text-8);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.ticker-inner {
+  max-width: var(--kite-page-max);
+  margin-inline: auto;
+  padding: var(--space-1) var(--space-4);
+  display: flex;
+  gap: var(--space-6);
+}
+.ticker-item {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: baseline;
+  color: var(--muted-foreground);
+}
+.ticker-item strong {
+  color: var(--foreground);
+  font-weight: var(--font-medium);
+  font-variant-numeric: tabular-nums;
+}
+.ticker-item .chg {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- header ---------- */
+.kite-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+}
+.kite-header-inner {
+  max-width: var(--kite-page-max);
+  margin-inline: auto;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+  color: inherit;
+}
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--kite-red);
+  color: #fff;
+  font-weight: 800;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.5px;
+}
+.brand-name {
+  font-weight: var(--font-bold);
+  font-size: var(--text-5);
+  letter-spacing: -0.2px;
+}
+.brand-name small {
+  font-weight: var(--font-normal);
+  color: var(--muted-foreground);
+  font-size: var(--text-8);
+  display: block;
+  line-height: 1.1;
+}
+.kite-nav {
+  display: flex;
+  gap: var(--space-1);
+  margin-inline-start: var(--space-2);
+}
+.kite-nav a {
+  color: var(--muted-foreground);
+  text-decoration: none;
+  font-size: var(--text-7);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-medium);
+}
+.kite-nav a[aria-current="page"] {
+  color: var(--foreground);
+  font-weight: var(--font-semibold);
+  background: var(--muted);
+}
+.kite-nav a:hover {
+  color: var(--foreground);
+}
+.kite-actions {
+  margin-inline-start: auto;
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.kite-updated {
+  font-size: var(--text-8);
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- stat strip (Kite-style summary figures) ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-6) 0 var(--space-2);
+}
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+  margin: 0 0 var(--space-1);
+}
+.stat-value {
+  font-size: var(--text-3);
+  font-weight: var(--font-semibold);
+  letter-spacing: -0.02em;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.stat-sub {
+  font-size: var(--text-8);
+  color: var(--muted-foreground);
+  margin: var(--space-1) 0 0;
+}
+
+/* ---------- panels ---------- */
+.panel {
+  margin-top: var(--space-6);
+}
+.panel-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+.panel-head h2 {
+  font-size: var(--text-4);
+  margin: 0;
+}
+.panel-head p {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-7);
+  color: var(--muted-foreground);
+}
+.panel-controls {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+.searchbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+  background: var(--background);
+  color: var(--muted-foreground);
+  min-width: 200px;
+  max-width: 300px;
+  flex: 1;
+}
+.searchbox:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgb(from var(--primary) r g b / 0.2);
+  color: var(--foreground);
+}
+.searchbox input {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-7);
+  width: 100%;
+  padding: 2px 0;
+}
+.searchbox input::placeholder {
+  color: var(--faint-foreground);
+}
+
+/* Sector filter chips — wrap cleanly, never overlap the search box. */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.chip {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted-foreground);
+  border-radius: var(--radius-full);
+  padding: 4px var(--space-3);
+  font-size: var(--text-8);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: background-color var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast);
+  white-space: nowrap;
+}
+.chip:hover {
+  border-color: var(--primary);
+  color: var(--foreground);
+}
+.chip[aria-pressed="true"] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.chip .count {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  background: rgb(from currentColor r g b / 0.14);
+  border-radius: var(--radius-full);
+  padding: 0 6px;
+  line-height: 1.5;
+}
+.chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+/* ---------- holdings table ---------- */
+.holdings-card {
+  overflow: hidden;
+  border-radius: var(--radius-large);
+}
+.holdings-card .table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.holdings-card table {
+  min-width: 980px;
+}
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+th.num {
+  text-align: right;
+}
+.instrument {
+  font-weight: var(--font-medium);
+  color: var(--foreground);
+}
+.exchange {
+  font-size: var(--text-8);
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+.sheet-ref {
+  display: block;
+  font-size: 11px;
+  font-weight: var(--font-normal);
+  color: var(--faint-foreground);
+}
+.pos {
+  color: var(--success);
+  font-weight: var(--font-semibold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.neg {
+  color: var(--danger);
+  font-weight: var(--font-semibold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+tr.sector-row td {
+  background: var(--muted);
+  font-weight: var(--font-semibold);
+  font-size: var(--text-7);
+}
+.sector-meta {
+  font-weight: var(--font-normal);
+  color: var(--muted-foreground);
+  font-size: var(--text-8);
+  margin-inline-start: var(--space-3);
+}
+.sort-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.sort-btn:hover {
+  color: var(--foreground);
+}
+
+/* Live-price pulse dot next to the LTP. */
+.live-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: var(--success);
+  margin-right: 6px;
+  vertical-align: 1px;
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.sector-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-full);
+  margin-right: var(--space-2);
+  vertical-align: baseline;
+}
+
+/* ---------- footer note ---------- */
+.fineprint {
+  margin-top: var(--space-6);
+  font-size: var(--text-8);
+  line-height: var(--leading-normal);
+  color: var(--muted-foreground);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-4);
+}
+
+/* ---------- loading ---------- */
+.loading-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  padding-top: var(--space-6);
+}
+
+/* ---------- analytics charts ---------- */
+.charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+.charts .card {
+  min-width: 0;
+  overflow: hidden;
+  transition: box-shadow var(--transition);
+}
+.charts .card:hover {
+  box-shadow: var(--shadow-medium);
+}
+.charts .card header h3 {
+  font-size: var(--text-4);
+  margin: 0;
+}
+.charts .card header p {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-7);
+  color: var(--muted-foreground);
+}
+.chart-body {
+  height: 250px;
+  width: 100%;
+}
+.chart-body.tall {
+  height: 330px;
+}
+.chart-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-1) var(--space-4);
+  padding-top: var(--space-2);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-7);
+  min-width: 0;
+}
+.legend-item i {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+.legend-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.legend-val {
+  margin-inline-start: auto;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .loading-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .charts {
+    grid-template-columns: 1fr;
+  }
+  .kite-nav {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  .searchbox {
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+  }
+  .panel-controls {
+    width: 100%;
+  }
+  .stat-value {
+    font-size: var(--text-4);
+  }
+  /* Keep the instrument column pinned while the numbers scroll. */
+  .holdings-card table {
+    min-width: 860px;
+  }
+  .holdings-card thead th:first-child,
+  .holdings-card tbody td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--card);
+    z-index: 1;
+    box-shadow: 1px 0 0 var(--border);
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .holdings-card tr.sector-row td:first-child {
+    background: var(--muted);
+  }
+  .holdings-card th,
+  .holdings-card td {
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+}

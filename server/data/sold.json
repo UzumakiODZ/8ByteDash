@@ -1,0 +1,5 @@
+[
+  { "particulars": "Infosys", "nseCode": "INFY", "bseCode": "500209", "purchasePrice": 1647, "qty": 36, "salePrice": 1920, "note": "Sold" },
+  { "particulars": "Happiest Minds", "nseCode": "HAPPSTMNDS", "bseCode": "543237", "purchasePrice": 1103, "qty": 45, "salePrice": 716, "note": "Must Exit" },
+  { "particulars": "EaseMyTrip", "nseCode": "EASEMYTRIP", "bseCode": "543272", "purchasePrice": 20, "qty": 1332, "salePrice": 15.5, "note": "Must exit" }
+]

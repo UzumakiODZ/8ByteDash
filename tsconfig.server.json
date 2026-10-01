@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "dist-server",
+    "rootDir": ".",
+    "allowImportingTsExtensions": false,
+    "jsx": "react-jsx"
+  },
+  "include": ["server/**/*.ts", "src/lib/portfolio-types.ts"]
+}

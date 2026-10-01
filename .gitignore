@@ -1,0 +1,6 @@
+node_modules/
+dist/
+dist-server/
+INSTRUCTIONS.md
+.env
+TECHNICAL.md
